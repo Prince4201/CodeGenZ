@@ -3,143 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Playground | CodeGenZ</title>
+    <title>CodeGenZ Playground</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #7e6fff;
-            --dark-bg: #121826;
-            --card-bg: #1e293b;
-            --border: #2d3749;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --code-bg: #0f172a;
+            --primary-light: #a594ff;
+            --primary-dark: #6a5af9;
+            --secondary: #00d4ff;
+            --accent: #ff4d88;
+            --dark-bg: #0f0f15;
+            --darker-bg: #0a0a0f;
+            --card-bg: #1a1a24;
+            --card-hover: #222230;
+            --border: #2d2d3a;
+            --text-primary: #f0f0ff;
+            --text-secondary: #b8b8d0;
+            --success: #00ffaa;
+            --warning: #ffcc00;
+            --danger: #ff4d4d;
+            --code-bg: #12121a;
+            --sidebar-width: 280px;
+            --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
         }
-        
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
             background-color: var(--dark-bg);
             color: var(--text-primary);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .container {
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
         }
-        
-        .editor-container {
-            flex: 1;
-            padding: 20px;
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--darker-bg);
+            height: 100vh;
+            position: fixed;
+            padding: 20px 0;
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
         }
-        
-        .header {
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 20px 20px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            padding: 0 15px;
+            flex-grow: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+
+        .menu-item:hover {
+            background: rgba(126, 111, 255, 0.15);
+            color: var(--primary-light);
+        }
+
+        .menu-item.active {
+            background: rgba(126, 111, 255, 0.2);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 25px;
+        }
+
+        /* Editor Styles */
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 50px);
+        }
+
+        .editor-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
-        
-        h1 {
-            color: var(--primary);
-            margin: 0;
-        }
-        
-        .controls {
+
+        .editor-actions {
             display: flex;
             gap: 10px;
         }
-        
-        button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
+
+        .btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 15px;
+            border-radius: 6px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: var(--transition);
         }
-        
-        button:hover {
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn:hover {
             opacity: 0.9;
         }
-        
-        .editor-area {
+
+        .code-container {
             display: flex;
             flex: 1;
             gap: 20px;
         }
-        
-        .code-editor, .output-console {
+
+        .code-editor, .output-panel {
             flex: 1;
-            background-color: var(--card-bg);
+            background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 15px;
-        }
-        
-        .editor-header, .console-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
+            flex-direction: column;
         }
-        
+
         textarea {
-            width: 100%;
-            height: calc(100% - 30px);
-            background-color: var(--code-bg);
-            color: var(--text-primary);
+            flex: 1;
+            background: var(--code-bg);
             border: 1px solid var(--border);
-            border-radius: 4px;
-            padding: 10px;
+            border-radius: 6px;
+            padding: 15px;
+            color: var(--text-primary);
             font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            line-height: 1.5;
             resize: none;
+            outline: none;
         }
-        
+
         #output {
-            height: calc(100% - 30px);
+            flex: 1;
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 15px;
             overflow-y: auto;
-            background-color: var(--code-bg);
-            padding: 10px;
-            border-radius: 4px;
-            white-space: pre-wrap;
             font-family: 'Fira Code', monospace;
+            white-space: pre-wrap;
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .lang-btn {
+            background: rgba(26, 26, 36, 0.7);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .lang-btn.active {
+            background: rgba(126, 111, 255, 0.15);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .logo-text, .menu-text {
+                display: none;
+            }
+            .main-content {
+                margin-left: 70px;
+            }
+            .code-container {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="logo-text">CodeGenZ</div>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-item">
+                <i class="fas fa-home"></i>
+                <span class="menu-text">Home</span>
+            </div>
+            <div class="menu-item active">
+                <i class="fas fa-code"></i>
+                <span class="menu-text">Playground</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-book"></i>
+                <span class="menu-text">Tutorials</span>
+            </div>
+            <div class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span class="menu-text">Settings</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
         <div class="editor-container">
-            <div class="header">
-                <h1>Code Playground</h1>
-                <div class="controls">
-                    <button id="runBtn">
-                        <i class="fas fa-play"></i> Run
+            <div class="editor-header">
+                <h2>Code Playground</h2>
+                <div class="editor-actions">
+                    <button class="btn btn-primary" id="runBtn">
+                        <i class="fas fa-play"></i> Run Code
                     </button>
-                    <button id="clearBtn">
+                    <button class="btn" id="clearBtn">
                         <i class="fas fa-trash"></i> Clear
                     </button>
                 </div>
             </div>
-            
-            <div class="editor-area">
+
+            <div class="language-selector">
+                <button class="lang-btn active" data-lang="javascript">JavaScript</button>
+                <button class="lang-btn" data-lang="python">Python</button>
+                <button class="lang-btn" data-lang="html">HTML</button>
+                <button class="lang-btn" data-lang="css">CSS</button>
+            </div>
+
+            <div class="code-container">
                 <div class="code-editor">
-                    <div class="editor-header">
-                        <h3>Editor</h3>
-                        <select id="languageSelect">
-                            <option value="javascript">JavaScript</option>
-                            <option value="python">Python</option>
-                            <option value="html">HTML</option>
-                            <option value="css">CSS</option>
-                        </select>
-                    </div>
-                    <textarea id="editor" spellcheck="false">// Welcome to the playground!
+                    <textarea id="editor" spellcheck="false">// Welcome to CodeGenZ Playground!
 // Try writing some JavaScript code
 
 function greet(name) {
@@ -148,13 +299,11 @@ function greet(name) {
 
 console.log(greet('Developer'));
 
-// Click Run to see the output</textarea>
+// Click "Run Code" to see the output</textarea>
                 </div>
                 
-                <div class="output-console">
-                    <div class="console-header">
-                        <h3>Output</h3>
-                    </div>
+                <div class="output-panel">
+                    <h3>Output</h3>
                     <div id="output">Output will appear here...</div>
                 </div>
             </div>
@@ -162,30 +311,45 @@ console.log(greet('Developer'));
     </div>
 
     <script>
-        // DOM elements
+        // DOM Elements
         const editor = document.getElementById('editor');
         const output = document.getElementById('output');
         const runBtn = document.getElementById('runBtn');
         const clearBtn = document.getElementById('clearBtn');
-        const languageSelect = document.getElementById('languageSelect');
+        const langButtons = document.querySelectorAll('.lang-btn');
         
-        // Initialize
+        // Current language
         let currentLanguage = 'javascript';
         
-        // Event listeners
-        runBtn.addEventListener('click', runCode);
-        clearBtn.addEventListener('click', clearOutput);
-        languageSelect.addEventListener('change', changeLanguage);
+        // Initialize
+        function init() {
+            setupEventListeners();
+        }
         
-        // Run code function
+        // Set up event listeners
+        function setupEventListeners() {
+            runBtn.addEventListener('click', runCode);
+            clearBtn.addEventListener('click', clearOutput);
+            
+            langButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    langButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentLanguage = btn.dataset.lang;
+                    updateEditorPlaceholder();
+                });
+            });
+        }
+        
+        // Run code
         function runCode() {
             const code = editor.value;
-            output.innerHTML = 'Running...';
+            output.textContent = 'Running...';
             
             setTimeout(() => {
                 try {
                     if (currentLanguage === 'javascript') {
-                        // Capture console.log output
+                        // Capture console.log
                         const originalConsoleLog = console.log;
                         let consoleOutput = '';
                         
@@ -194,50 +358,53 @@ console.log(greet('Developer'));
                             originalConsoleLog.apply(console, arguments);
                         };
                         
-                        // Execute the code
+                        // Execute code
                         new Function(code)();
                         
-                        // Restore original console.log
+                        // Restore console.log
                         console.log = originalConsoleLog;
                         
                         // Display output
-                        output.innerHTML = consoleOutput || 'Code executed (no output)';
+                        output.textContent = consoleOutput || 'Code executed (no output)';
                     } else {
-                        output.innerHTML = 'Execution for ' + currentLanguage + ' is not supported in this demo.';
+                        output.textContent = `Note: ${currentLanguage} execution is not implemented in this demo. Only JavaScript can be executed.`;
                     }
                 } catch (error) {
-                    output.innerHTML = 'Error: ' + error.message;
+                    output.textContent = 'Error: ' + error.message;
                 }
             }, 100);
         }
         
-        // Clear output function
+        // Clear output
         function clearOutput() {
-            output.innerHTML = 'Output cleared';
+            output.textContent = 'Output cleared';
         }
         
-        // Change language function
-        function changeLanguage() {
-            currentLanguage = languageSelect.value;
+        // Update editor placeholder based on language
+        function updateEditorPlaceholder() {
+            let defaultCode = '';
             
-            // Update editor placeholder based on language
             switch(currentLanguage) {
                 case 'javascript':
-                    editor.value = '// JavaScript code here\nconsole.log("Hello World");';
+                    defaultCode = '// JavaScript code here\nconsole.log("Hello World");';
                     break;
                 case 'python':
-                    editor.value = '# Python code here\nprint("Hello World")';
+                    defaultCode = '# Python code here\nprint("Hello World")';
                     break;
                 case 'html':
-                    editor.value = '<!-- HTML code here -->\n<h1>Hello World</h1>';
+                    defaultCode = '<!-- HTML code here -->\n<h1>Hello World</h1>';
                     break;
                 case 'css':
-                    editor.value = '/* CSS code here */\nbody {\n  background: #121826;\n}';
+                    defaultCode = '/* CSS code here */\nbody {\n  background: #121826;\n}';
                     break;
             }
             
-            output.innerHTML = 'Language changed to ' + currentLanguage;
+            editor.value = defaultCode;
+            output.textContent = `Language changed to ${currentLanguage}`;
         }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
