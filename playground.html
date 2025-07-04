@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeGenZ Playground</title>
+    <title>Playground | CodeGenZ AI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@500;600&display=swap">
     <style>
         :root {
             --primary: #7e6fff;
@@ -25,13 +26,15 @@
             --code-bg: #12121a;
             --sidebar-width: 280px;
             --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --genz-font: 'Space Grotesk', sans-serif;
+            --main-font: 'Poppins', sans-serif;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: var(--main-font);
         }
 
         body {
@@ -40,18 +43,26 @@
             display: flex;
             min-height: 100vh;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(126, 111, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 20%);
         }
 
-        /* Sidebar */
+        /* Sidebar - GenZ Glassmorphism */
         .sidebar {
             width: var(--sidebar-width);
-            background: var(--darker-bg);
+            background: rgba(15, 15, 21, 0.8);
+            backdrop-filter: blur(10px);
             height: 100vh;
             position: fixed;
+            left: 0;
+            top: 0;
             padding: 20px 0;
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
+            z-index: 100;
+            transition: var(--transition);
         }
 
         .logo {
@@ -72,88 +83,152 @@
             align-items: center;
             justify-content: center;
             font-size: 18px;
+            flex-shrink: 0;
         }
 
         .logo-text {
             font-size: 1.5rem;
             font-weight: 700;
+            font-family: var(--genz-font);
             background: linear-gradient(to right, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
 
         .sidebar-menu {
-            padding: 0 15px;
+            padding: 0 10px;
             flex-grow: 1;
+            overflow-y: auto;
         }
 
         .menu-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 5px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            margin-bottom: 6px;
             cursor: pointer;
             transition: var(--transition);
             color: var(--text-secondary);
+            font-size: 0.95rem;
         }
 
         .menu-item:hover {
             background: rgba(126, 111, 255, 0.15);
             color: var(--primary-light);
+            transform: translateX(5px);
         }
 
         .menu-item.active {
             background: rgba(126, 111, 255, 0.2);
             color: var(--primary);
             font-weight: 500;
+            border-left: 3px solid var(--primary);
         }
 
+        .menu-item i {
+            width: 22px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .sidebar-footer {
+            padding: 15px 20px 0;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-top: auto;
+        }
+
+        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
             padding: 25px;
+            transition: var(--transition);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: var(--genz-font);
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .user-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            background: rgba(26, 26, 36, 0.8);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn:hover {
+            background: rgba(126, 111, 255, 0.15);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn i {
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(126, 111, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(126, 111, 255, 0.4);
         }
 
         /* Editor Styles */
         .editor-container {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 50px);
+            height: calc(100vh - 100px);
+            gap: 20px;
         }
 
         .editor-header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
         }
 
         .editor-actions {
             display: flex;
             gap: 10px;
-        }
-
-        .btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: var(--transition);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
         }
 
         .code-container {
@@ -164,37 +239,88 @@
 
         .code-editor, .output-panel {
             flex: 1;
-            background: var(--card-bg);
+            background: rgba(26, 26, 36, 0.8);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 16px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
         }
 
-        textarea {
+        .code-editor:hover, .output-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+            background: rgba(34, 34, 48, 0.8);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .panel-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: var(--genz-font);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-header i {
+            color: var(--secondary);
+        }
+
+        textarea#editor {
             flex: 1;
             background: var(--code-bg);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 15px;
+            border-radius: 12px;
+            padding: 18px;
             color: var(--text-primary);
             font-family: 'Fira Code', monospace;
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: 15px;
+            line-height: 1.6;
             resize: none;
             outline: none;
+            transition: var(--transition);
+        }
+
+        textarea#editor:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(126, 111, 255, 0.2);
         }
 
         #output {
             flex: 1;
             background: var(--code-bg);
             border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 15px;
+            border-radius: 12px;
+            padding: 18px;
             overflow-y: auto;
             font-family: 'Fira Code', monospace;
             white-space: pre-wrap;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        #output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #output::-webkit-scrollbar-track {
+            background: rgba(26, 26, 36, 0.5);
+            border-radius: 4px;
+        }
+
+        #output::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
         }
 
         .language-selector {
@@ -208,9 +334,14 @@
             border: 1px solid var(--border);
             color: var(--text-secondary);
             padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        .lang-btn:hover {
+            background: rgba(126, 111, 255, 0.1);
         }
 
         .lang-btn.active {
@@ -219,60 +350,167 @@
             border-color: var(--primary);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 101;
+            background: var(--primary);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(126, 111, 255, 0.4);
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
             .sidebar {
-                width: 70px;
+                transform: translateX(-100%);
+                opacity: 0;
+                z-index: 100;
             }
-            .logo-text, .menu-text {
-                display: none;
+            
+            .sidebar.open {
+                transform: translateX(0);
+                opacity: 1;
             }
+            
             .main-content {
-                margin-left: 70px;
+                margin-left: 0;
             }
+            
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
             .code-container {
                 flex-direction: column;
             }
         }
+
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 20px 15px;
+            }
+            
+            .header h1 {
+                font-size: 1.7rem;
+            }
+            
+            .panel-header h3 {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .editor-actions {
+                width: 100%;
+            }
+            
+            .btn {
+                flex: 1;
+                justify-content: center;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Gen-Z Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Pulse animation for interactive elements */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse:hover {
+            animation: pulse 1.5s infinite;
+        }
     </style>
 </head>
 <body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+    
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="logo">
-            <div class="logo-icon">
+            <div class="logo-icon floating">
                 <i class="fas fa-robot"></i>
             </div>
             <div class="logo-text">CodeGenZ</div>
         </div>
         
         <div class="sidebar-menu">
-            <div class="menu-item">
+            <div class="menu-item" onclick="window.location.href='index.html'">
                 <i class="fas fa-home"></i>
-                <span class="menu-text">Home</span>
+                <span class="menu-text">Dashboard</span>
+            </div>
+            <div class="menu-item" onclick="window.location.href='index.html#historySection'">
+                <i class="fas fa-history"></i>
+                <span class="menu-text">History</span>
+            </div>
+            <div class="menu-item" onclick="window.location.href='tutorials.html'">
+                <i class="fas fa-book"></i>
+                <span class="menu-text">Tutorials</span>
             </div>
             <div class="menu-item active">
                 <i class="fas fa-code"></i>
                 <span class="menu-text">Playground</span>
             </div>
-            <div class="menu-item">
-                <i class="fas fa-book"></i>
-                <span class="menu-text">Tutorials</span>
-            </div>
-            <div class="menu-item">
+            <div class="menu-item" id="settingsBtn">
                 <i class="fas fa-cog"></i>
                 <span class="menu-text">Settings</span>
             </div>
+        </div>
+        
+        <div class="sidebar-footer">
+            <p>CodeGenZ AI v3.0</p>
+            <p>Powered by Gemini API</p>
         </div>
     </div>
     
     <!-- Main Content -->
     <div class="main-content">
+        <div class="header">
+            <h1>Code Playground</h1>
+            <div class="user-controls">
+                <button class="btn">
+                    <i class="fas fa-search"></i>
+                    <span>Search</span>
+                </button>
+            </div>
+        </div>
+
         <div class="editor-container">
             <div class="editor-header">
-                <h2>Code Playground</h2>
+                <h2>Interactive Coding Environment</h2>
                 <div class="editor-actions">
-                    <button class="btn btn-primary" id="runBtn">
+                    <button class="btn btn-primary pulse" id="runBtn">
                         <i class="fas fa-play"></i> Run Code
                     </button>
                     <button class="btn" id="clearBtn">
@@ -290,6 +528,9 @@
 
             <div class="code-container">
                 <div class="code-editor">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-code"></i> Editor</h3>
+                    </div>
                     <textarea id="editor" spellcheck="false">// Welcome to CodeGenZ Playground!
 // Try writing some JavaScript code
 
@@ -303,7 +544,9 @@ console.log(greet('Developer'));
                 </div>
                 
                 <div class="output-panel">
-                    <h3>Output</h3>
+                    <div class="panel-header">
+                        <h3><i class="fas fa-terminal"></i> Output</h3>
+                    </div>
                     <div id="output">Output will appear here...</div>
                 </div>
             </div>
@@ -317,6 +560,9 @@ console.log(greet('Developer'));
         const runBtn = document.getElementById('runBtn');
         const clearBtn = document.getElementById('clearBtn');
         const langButtons = document.querySelectorAll('.lang-btn');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const settingsBtn = document.getElementById('settingsBtn');
         
         // Current language
         let currentLanguage = 'javascript';
@@ -339,12 +585,29 @@ console.log(greet('Developer'));
                     updateEditorPlaceholder();
                 });
             });
+
+            // Mobile menu button
+            mobileMenuBtn.addEventListener('click', toggleSidebar);
+            
+            // Settings button
+            settingsBtn.addEventListener('click', function() {
+                window.location.href = 'index.html#settingsSection';
+            });
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
         }
         
         // Run code
         function runCode() {
             const code = editor.value;
             output.textContent = 'Running...';
+            
+            // Add loading animation
+            runBtn.disabled = true;
+            runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
             
             setTimeout(() => {
                 try {
@@ -371,8 +634,11 @@ console.log(greet('Developer'));
                     }
                 } catch (error) {
                     output.textContent = 'Error: ' + error.message;
+                } finally {
+                    runBtn.disabled = false;
+                    runBtn.innerHTML = '<i class="fas fa-play"></i> Run Code';
                 }
-            }, 100);
+            }, 300);
         }
         
         // Clear output
